@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assinar Powercine</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding-top: 100px;
+    }
+    button {
+      background: linear-gradient(90deg, #9c27b0, #e91e63);
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Powercine</h1>
+  <p>Assine e tenha acesso ilimitado a filmes e séries.</p>
+
+  <button onclick="assinar()">Assinar por R$ 5/mês</button>
+
+  <script>
+    function assinar() {
+      fetch("https://api.mercadopago.com/preapproval_plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer TEST-710********52094-10********cef70201********21d8fa0b********2853334"
+        },
+        body: JSON.stringify({
+          reason: "Powercine - Filmes e Séries",
+          auto_recurring: {
+            frequency: 1,
+            frequency_type: "months",
+            transaction_amount: 5.00,
+            currency_id: "BRL"
+          },
+          back_url: "https://powercine.com/sucesso.html"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.init_point) {
+          window.location.href = data.init_point;
+        } else {
+          alert("Erro ao iniciar o checkout");
+          console.log(data);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
